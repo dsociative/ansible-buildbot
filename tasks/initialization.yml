@@ -1,7 +1,7 @@
 ---
 - name: create buildbot master
   sudo_user: "{{ buildbot_user }}"
-  shell: chdir={{ buildbot_home }} buildbot create-master master
+  shell: buildbot create-master {{ buildbot_master }}
 
 - name: buildbot master configuration
   sudo_user: "{{ buildbot_user }}"

@@ -1,6 +1,7 @@
 ---
 buildbot_user: "buildbot"
 buildbot_home: "/home/buildbot"
+buildbot_master: "{{ buildbot_home }}/master"
 
 buildbot_title: Pyflakes
 buildbot_project_url: "https://nicolai86.eu"
