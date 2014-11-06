@@ -11,9 +11,14 @@
     - git
     - python-setuptools
 
-- name: install buildbot
-  easy_install:
-    name: "{{ item }}"
-  with_items:
-    - buildbot
-    - buildbot-slave
+- name: install supervisor
+  apt: pkg=supervisor state=latest
+  when: buildbot_create_slave_supervisor
+
+- name: install buildbot master
+  easy_install: name=buildbot
+  when: buildbot_create_master
+
+- name: install buildbot slave
+  easy_install: name=buildbot-slave
+  when: buildbot_create_slave

@@ -2,6 +2,7 @@
 buildbot_user: "buildbot"
 buildbot_home: "/home/buildbot"
 buildbot_master: "{{ buildbot_home }}/master"
+buildbot_slaves_dir: "{{ buildbot_home }}/slaves"
 
 buildbot_title: Pyflakes
 buildbot_project_url: "https://nicolai86.eu"
@@ -14,6 +15,10 @@ buildbot_basic_auth: yes
 
 buildbot_generate_master_cfg: yes
 buildbot_template_master_cfg: master.cfg.js
+
+buildbot_create_master: true
+buildbot_create_slave: true
+buildbot_create_slave_supervisor: false
 
 buildbot_repository: ""
 buildbot_branch: "master"

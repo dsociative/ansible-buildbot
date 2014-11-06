@@ -2,18 +2,31 @@
 - name: create buildbot master
   sudo_user: "{{ buildbot_user }}"
   shell: buildbot create-master {{ buildbot_master }}
+  when: buildbot_create_master
 
 - name: buildbot master configuration
   sudo_user: "{{ buildbot_user }}"
   template:
     src: "{{ buildbot_template_master_cfg }}"
     dest: "{{ buildbot_home }}/master/master.cfg"
-  when: buildbot_generate_master_cfg
+  when: buildbot_generate_master_cfg and buildbot_create_master
 
 - name: buildbot slave configuration
   sudo_user: "{{ buildbot_user }}"
-  shell: chdir={{ buildbot_home }}/slaves/{{ item.name }} buildslave create-slave . {{ buildbot_web_host }}:{{ buildbot_slave_port }} {{ item.name }} {{ item.password }}
+  shell: chdir={{ buildbot_slaves_dir }}/{{ item.name }} buildslave create-slave . {{ buildbot_web_host }}:{{ buildbot_slave_port }} {{ item.name }} {{ item.password }}
   with_items: "{{ buildbot_slaves }}"
+  when: buildbot_create_slave
+
+- name: buildbot slave supervisor configuration
+  sudo: yes
+  template: src=buildbot-slave.conf.j2 dest={{ supervisor_conf_dir }}/buildbot-slave.conf
+  when: buildbot_create_slave_supervisor
+
+- name: buildbot slave supervisor update
+  sudo: yes
+  supervisorctl: name=buildslave-{{ item.name }} state=present
+  with_items: "{{ buildbot_slaves }}"
+  when: buildbot_create_slave_supervisor
 
 - name: set slave admin information
   sudo_user: "{{ buildbot_user }}"
